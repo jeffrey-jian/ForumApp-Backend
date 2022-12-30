@@ -1,4 +1,4 @@
-package users
+package dataaccess
 
 import (
 	"database/sql"
@@ -16,7 +16,7 @@ import (
 // 	return users, nil
 // }
 
-func List(db *sql.DB, id string) ([]models.User, error) {
+func GetUsers(db *sql.DB, id string) ([]models.User, error) {
 
 	var results *sql.Rows
 	var err error

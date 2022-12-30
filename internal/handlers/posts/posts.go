@@ -1,4 +1,4 @@
-package users
+package posts
 
 import (
 	"encoding/json"
@@ -13,37 +13,37 @@ import (
 )
 
 const (
-	ListUsers = "users.HandleList"
+	ListPosts = "posts.HandleList"
 
-	SuccessfulListUsersMessage = "Successfully listed users"
+	SuccessfulListPostsMessage = "Successfully listed posts"
 	ErrRetrieveDatabase        = "Failed to retrieve database in %s"
-	ErrRetrieveUsers           = "Failed to retrieve users in %s"
-	ErrEncodeView              = "Failed to retrieve users in %s"
+	ErrRetrievePosts           = "Failed to retrieve posts in %s"
+	ErrEncodeView              = "Failed to retrieve posts in %s"
 )
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	db, err := database.GetDB()
 
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListUsers))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListPosts))
 	}
 
 	id := r.URL.Query().Get("id")
 
-	users, err := da.GetUsers(db, id)
+	posts, err := da.GetPosts(db, id)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveUsers, ListUsers))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrievePosts, ListPosts))
 	}
 
-	data, err := json.Marshal(users)
+	data, err := json.Marshal(posts)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListUsers))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListPosts))
 	}
 
 	return &api.Response{
 		Payload: api.Payload{
 			Data: data,
 		},
-		Messages: []string{SuccessfulListUsersMessage},
+		Messages: []string{SuccessfulListPostsMessage},
 	}, nil
 }
