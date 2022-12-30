@@ -27,7 +27,9 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListUsers))
 	}
 
-	users, err := users.List(db)
+	id := r.URL.Query().Get("id")
+
+	users, err := users.List(db, id)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveUsers, ListUsers))
 	}
@@ -36,6 +38,8 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListUsers))
 	}
+
+	fmt.Println(users)
 
 	return &api.Response{
 		Payload: api.Payload{
