@@ -10,6 +10,8 @@ import (
 	"github.com/CVWO/sample-go-app/internal/database"
 
 	"github.com/pkg/errors"
+
+	"github.com/CVWO/sample-go-app/internal/models"
 )
 
 const (
@@ -22,6 +24,7 @@ const (
 )
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+
 	db, err := database.GetDB()
 
 	if err != nil {
@@ -46,4 +49,45 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 		},
 		Messages: []string{SuccessfulListCommentsMessage},
 	}, nil
+}
+
+func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	fmt.Println(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
+}
+
+func HandleCreateComment(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+
+	db, err := database.GetDB()
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListComments))
+	}
+
+	var comment models.Comment
+	json.NewDecoder(r.Body).Decode(&comment)
+
+	fmt.Println("handling creating comment...")
+	fmt.Println(comment)
+
+	query, err := db.Prepare(
+		`INSERT INTO Comments (author_id, comment_text, post_id) 
+				VALUES (?, ?, ?)`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, er := query.Exec(comment.Author_ID, comment.Comment_text, comment.Post_ID)
+
+	if er != nil {
+		return nil, err
+	}
+	defer query.Close()
+	respondwithJSON(w, http.StatusCreated, map[string]string{"message": "successfully created"})
+
+	return nil, nil
+
 }

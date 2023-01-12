@@ -22,6 +22,7 @@ const (
 )
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+
 	db, err := database.GetDB()
 
 	if err != nil {
