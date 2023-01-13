@@ -2,7 +2,6 @@ package dataaccess
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/CVWO/sample-go-app/internal/models"
 )
@@ -34,7 +33,6 @@ func GetComments(db *sql.DB, post_id string) ([]models.Comment, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println(&results)
 	comments := []models.Comment{}
 
 	for results.Next() {
