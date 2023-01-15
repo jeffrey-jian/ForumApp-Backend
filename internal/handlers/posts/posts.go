@@ -9,11 +9,15 @@ import (
 	da "github.com/CVWO/sample-go-app/internal/dataaccess"
 	"github.com/CVWO/sample-go-app/internal/database"
 
+	"github.com/CVWO/sample-go-app/internal/models"
+	"github.com/go-chi/chi"
 	"github.com/pkg/errors"
 )
 
 const (
-	ListPosts = "posts.HandleList"
+	ListPosts  = "posts.HandleList"
+	CreatePost = "posts.HandleCreatePost"
+	DeletePost = "posts.HandleDeletePost"
 
 	SuccessfulListPostsMessage = "Successfully listed posts"
 	ErrRetrieveDatabase        = "Failed to retrieve database in %s"
@@ -47,4 +51,62 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 		},
 		Messages: []string{SuccessfulListPostsMessage},
 	}, nil
+}
+
+func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	// fmt.Println(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
+}
+
+func HandleCreatePost(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+
+	db, err := database.GetDB()
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, CreatePost))
+	}
+
+	var post models.Post
+	json.NewDecoder(r.Body).Decode(&post)
+
+	query, err := db.Prepare(
+		`INSERT INTO Posts (author_id, category, title, post_text) 
+			VALUES (?, ?, ?, ?)`)
+	if err != nil {
+		return nil, err
+	}
+
+	_, er := query.Exec(post.Author_ID, post.Category, post.Title, post.Post_text)
+	if er != nil {
+		return nil, er
+	}
+	defer query.Close()
+
+	respondwithJSON(w, http.StatusCreated, map[string]string{"message": "successfully created"})
+	return nil, nil
+}
+
+func HandleDeletePost(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+
+	db, err := database.GetDB()
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, DeletePost))
+	}
+	id := chi.URLParam(r, "id")
+
+	query, err := db.Prepare("DELETE FROM posts WHERE id=?")
+	if err != nil {
+		return nil, err
+	}
+	_, er := query.Exec(id)
+	if er != nil {
+		return nil, er
+	}
+	query.Close()
+
+	respondwithJSON(w, http.StatusOK, map[string]string{"message": "successfully deleted"})
+
+	return nil, nil
 }

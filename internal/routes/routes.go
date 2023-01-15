@@ -14,6 +14,8 @@ func GetRoutes() func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/users", GetUsers)
 		r.Get("/posts", GetPosts)
+		r.Post("/posts", CreatePost)
+		r.Delete("/posts/{id}", DeletePost)
 		r.Get("/comments", GetComments)
 		r.Post("/comments", CreateComment)
 		r.Put("/comments/{id}", EditComment)
@@ -33,6 +35,14 @@ func GetPosts(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+func CreatePost(w http.ResponseWriter, req *http.Request) {
+	posts.HandleCreatePost(w, req)
+}
+
+func DeletePost(w http.ResponseWriter, req *http.Request) {
+	posts.HandleDeletePost(w, req)
 }
 
 func GetComments(w http.ResponseWriter, req *http.Request) {

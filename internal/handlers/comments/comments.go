@@ -15,7 +15,10 @@ import (
 )
 
 const (
-	ListComments = "comments.HandleList"
+	ListComments  = "comments.HandleList"
+	CreateComment = "comments.HandleCreateComment"
+	EditComment   = "comments.HandleEditComment"
+	DeleteComment = "comments.HandleDeleteComment"
 
 	SuccessfulListCommentsMessage = "Successfully listed comments"
 	ErrRetrieveDatabase           = "Failed to retrieve database in %s"
@@ -63,13 +66,11 @@ func HandleCreateComment(w http.ResponseWriter, r *http.Request) (*api.Response,
 
 	db, err := database.GetDB()
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListComments))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, CreateComment))
 	}
 
 	var comment models.Comment
 	json.NewDecoder(r.Body).Decode(&comment)
-
-	fmt.Println("handling creating comment...")
 
 	query, err := db.Prepare(
 		`INSERT INTO Comments (author_id, comment_text, post_id) 
@@ -95,7 +96,7 @@ func HandleEditComment(w http.ResponseWriter, r *http.Request) (*api.Response, e
 
 	db, err := database.GetDB()
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListComments))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, EditComment))
 	}
 
 	var comment models.Comment
@@ -124,7 +125,7 @@ func HandleDeleteComment(w http.ResponseWriter, r *http.Request) (*api.Response,
 
 	db, err := database.GetDB()
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListComments))
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, DeleteComment))
 	}
 
 	id := chi.URLParam(r, "id")
