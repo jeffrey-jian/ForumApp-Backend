@@ -102,6 +102,7 @@ func HandleEditComment(w http.ResponseWriter, r *http.Request) (*api.Response, e
 	var comment models.Comment
 	id := chi.URLParam(r, "id")
 	json.NewDecoder(r.Body).Decode(&comment)
+	fmt.Println(r.Body)
 
 	query, err := db.Prepare("UPDATE Comments SET comment_text=? WHERE id=?")
 	if err != nil {

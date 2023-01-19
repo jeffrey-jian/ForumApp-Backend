@@ -13,6 +13,7 @@ import (
 func GetRoutes() func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/users", GetUsers)
+		r.Post("/users", NewUser)
 		r.Get("/posts", GetPosts)
 		r.Post("/posts", CreatePost)
 		r.Delete("/posts/{id}", DeletePost)
@@ -28,6 +29,10 @@ func GetUsers(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+func NewUser(w http.ResponseWriter, req *http.Request) {
+	users.HandleNewUser(w, req)
 }
 
 func GetPosts(w http.ResponseWriter, req *http.Request) {

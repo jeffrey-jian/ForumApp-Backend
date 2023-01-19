@@ -6,7 +6,7 @@ import (
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
-func GetPosts(db *sql.DB, id string) ([]models.Post, error) {
+func GetPosts(db *sql.DB, id string, filter string) ([]models.Post, error) {
 
 	var results *sql.Rows
 	var err error
@@ -20,7 +20,17 @@ func GetPosts(db *sql.DB, id string) ([]models.Post, error) {
 																		Posts.title AS title,
 																		Posts.post_text AS post_text
 																FROM Posts
-																JOIN Users ON Posts.author_id = Users.id AND Post.id = ` + id)
+																JOIN Users ON Posts.author_id = Users.id AND Posts.id = ` + id)
+	} else if filter != "all" {
+		results, err = db.Query(`SELECT Posts.id AS id,
+																		Posts.author_id AS author_id,
+																		Users.username AS author_username,
+																		Posts.Category AS category,
+																		Posts.date_created AS date_created,
+																		Posts.title AS title,
+																		Posts.post_text AS post_text
+																FROM Posts
+																JOIN Users ON Posts.author_id = Users.id AND Posts.Category = '` + filter + `'`)
 	} else {
 		results, err = db.Query(`SELECT Posts.id AS id,
 																		Posts.author_id AS author_id,
