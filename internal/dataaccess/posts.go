@@ -2,7 +2,6 @@ package dataaccess
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/CVWO/sample-go-app/internal/models"
 )
@@ -39,7 +38,6 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author st
 																	Posts.post_text LIKE '%` + searchTerm + `%'
 																) ORDER BY date_created DESC`)
 	} else if author != "" {
-		fmt.Println("third")
 		results, err = db.Query(`SELECT Posts.id AS id,
 																		Posts.author_id AS author_id,
 																		Users.username AS author_username,

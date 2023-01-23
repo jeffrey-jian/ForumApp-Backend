@@ -17,7 +17,7 @@ type Database struct {
 func GetDB() (*sql.DB, error) {
 
 	var db *sql.DB
-
+	fmt.Println("Connecting to DB")
 	db, err := sql.Open("mysql", "root:gya1ydxf@tcp(127.0.0.1:3306)/forum")
 
 	if err != nil {
