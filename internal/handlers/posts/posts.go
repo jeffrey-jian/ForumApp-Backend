@@ -29,7 +29,6 @@ const (
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
 	db, err := database.GetDB()
-
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListPosts))
 	}
@@ -40,8 +39,10 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	author := r.URL.Query().Get("author")
 	likedBy := r.URL.Query().Get("likedBy")
 
+	fmt.Println("Running da.GetPosts()...")
 	posts, err := da.GetPosts(db, id, filter, searchTerm, author, likedBy)
 	if err != nil {
+		fmt.Println("Error while running da.GetPosts()")
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrievePosts, ListPosts))
 	}
 

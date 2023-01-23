@@ -2,6 +2,7 @@ package dataaccess
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/CVWO/sample-go-app/internal/models"
 )
@@ -85,6 +86,7 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author st
 	}
 
 	if err != nil {
+		fmt.Println("Error in dataacess/posts.go - db.Query", err)
 		panic(err.Error())
 	}
 
@@ -95,12 +97,11 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author st
 
 		err = results.Scan(&post.ID, &post.Author_ID, &post.Author_Username, &post.Author_AvatarColor, &post.Category, &post.Date_created, &post.Title, &post.Post_text)
 		if err != nil {
+			fmt.Println("Error in dataacess/posts.go - results.Scan", err)
 			panic(err.Error())
 		}
-
 		posts = append(posts, post)
 	}
-
 	return posts, nil
 
 }
