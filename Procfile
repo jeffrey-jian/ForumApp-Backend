@@ -1,1 +1,1 @@
-web: cmd/server/main.go
+web: bin/forum-app-backend
