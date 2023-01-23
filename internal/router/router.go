@@ -1,12 +1,15 @@
 package router
 
 import (
+	"fmt"
+
 	"github.com/CVWO/sample-go-app/internal/routes"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 )
 
 func Setup() chi.Router {
+	fmt.Println("Setting up router...")
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*", "http://localhost:3000"},
