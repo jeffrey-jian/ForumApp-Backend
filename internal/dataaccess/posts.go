@@ -2,6 +2,7 @@ package dataaccess
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/CVWO/sample-go-app/internal/models"
 )
@@ -38,6 +39,7 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author st
 																	Posts.post_text LIKE '%` + searchTerm + `%'
 																) ORDER BY date_created DESC`)
 	} else if author != "" {
+		fmt.Println("third")
 		results, err = db.Query(`SELECT Posts.id AS id,
 																		Posts.author_id AS author_id,
 																		Users.username AS author_username,
@@ -60,7 +62,7 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author st
 																FROM Posts
 																JOIN Users ON Posts.author_id = Users.id 
 																JOIN Likes ON Likes.post_id = Posts.id AND Likes.user_id = ` + likedBy)
-	} else if filter != ("All") {
+	} else if filter != "All" && filter != "all" {
 		results, err = db.Query(`SELECT Posts.id AS id,
 																		Posts.author_id AS author_id,
 																		Users.username AS author_username,

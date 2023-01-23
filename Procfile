@@ -1,1 +1,1 @@
-web: forum-app-backend
+web: cmd/server
