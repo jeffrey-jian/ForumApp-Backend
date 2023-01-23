@@ -13,7 +13,8 @@ func GetComments(db *sql.DB, post_id string) ([]models.Comment, error) {
 	if post_id != "" {
 		results, err = db.Query(`SELECT Comments.id AS id, 
 																		Comments.author_id AS author_id, 
-																		Users.username AS author_username, 
+																		Users.username AS author_username,
+																		Users.avatarColor AS author_avatarColor,
 																		Comments.date_created AS date_created, 
 																		Comments.comment_text AS comment_text, 
 																		Comments.post_id AS post_id 
@@ -22,7 +23,8 @@ func GetComments(db *sql.DB, post_id string) ([]models.Comment, error) {
 	} else {
 		results, err = db.Query(`SELECT Comments.id AS id, 
 																		Comments.author_id AS author_id, 
-																		Users.username AS author_username, 
+																		Users.username AS author_username,
+																		Users.avatarColor AS author_avatarColor, 
 																		Comments.date_created AS date_created, 
 																		Comments.comment_text AS comment_text, 
 																		Comments.post_id AS post_id 
@@ -38,7 +40,7 @@ func GetComments(db *sql.DB, post_id string) ([]models.Comment, error) {
 	for results.Next() {
 		var comment models.Comment
 
-		err = results.Scan(&comment.ID, &comment.Author_ID, &comment.Author_Username, &comment.Date_created, &comment.Comment_text, &comment.Post_ID)
+		err = results.Scan(&comment.ID, &comment.Author_ID, &comment.Author_Username, &comment.Author_AvatarColor, &comment.Date_created, &comment.Comment_text, &comment.Post_ID)
 		if err != nil {
 			panic(err.Error())
 		}

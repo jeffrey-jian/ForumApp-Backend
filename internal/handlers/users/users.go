@@ -8,7 +8,6 @@ import (
 	"github.com/CVWO/sample-go-app/internal/api"
 	da "github.com/CVWO/sample-go-app/internal/dataaccess"
 	"github.com/CVWO/sample-go-app/internal/database"
-	"github.com/CVWO/sample-go-app/internal/models"
 
 	"github.com/pkg/errors"
 )
@@ -31,8 +30,9 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	}
 
 	username := r.URL.Query().Get("username")
+	avatarColor := r.URL.Query().Get("avatarColor")
 
-	users, err := da.GetUsers(db, username)
+	users, err := da.GetUsers(db, username, avatarColor)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveUsers, ListUsers))
 	}
@@ -58,33 +58,33 @@ func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
-func HandleNewUser(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+// func HandleNewUser(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
-	db, err := database.GetDB()
-	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, FetchUser))
-	}
+// 	db, err := database.GetDB()
+// 	if err != nil {
+// 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, FetchUser))
+// 	}
 
-	var user models.User
-	json.NewDecoder(r.Body).Decode(&user)
+// 	var user models.User
+// 	json.NewDecoder(r.Body).Decode(&user)
 
-	fmt.Println(r.Body)
+// 	fmt.Println(r.Body)
 
-	query, err := db.Prepare(
-		`INSERT INTO Users (username) VALUES (?)`)
+// 	query, err := db.Prepare(
+// 		`INSERT INTO Users (username) VALUES (?)`)
 
-	if err != nil {
-		return nil, err
-	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	_, er := query.Exec(user.Username)
+// 	_, er := query.Exec(user.Username)
 
-	if er != nil {
-		return nil, er
-	}
-	defer query.Close()
+// 	if er != nil {
+// 		return nil, er
+// 	}
+// 	defer query.Close()
 
-	respondwithJSON(w, http.StatusCreated, map[string]string{"message": "successfully created"})
+// 	respondwithJSON(w, http.StatusCreated, map[string]string{"message": "successfully created"})
 
-	return nil, nil
-}
+// 	return nil, nil
+// }

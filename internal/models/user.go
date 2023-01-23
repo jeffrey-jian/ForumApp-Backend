@@ -5,8 +5,9 @@ import (
 )
 
 type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
+	ID          int    `json:"id"`
+	Username    string `json:"username"`
+	AvatarColor string `json:"avatarColor"`
 }
 
 func (user *User) Greet() string {

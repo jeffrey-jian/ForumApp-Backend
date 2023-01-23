@@ -35,8 +35,9 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
 	id := r.URL.Query().Get("id")
 	filter := r.URL.Query().Get("filter")
+	searchTerm := r.URL.Query().Get("searchTerm")
 
-	posts, err := da.GetPosts(db, id, filter)
+	posts, err := da.GetPosts(db, id, filter, searchTerm)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrievePosts, ListPosts))
 	}

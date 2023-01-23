@@ -1,7 +1,7 @@
 package models
 
 type Like struct {
-	ID          int `json:"id"`
-	Post_ID     int `json:"post_id"`
-	Liked_by_ID int `json:"liked_by_id"`
+	ID      int `json:"id"`
+	User_ID int `json:"user_id"`
+	Post_ID int `json:"post_id"`
 }
