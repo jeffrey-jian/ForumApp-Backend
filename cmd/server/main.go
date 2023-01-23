@@ -16,6 +16,5 @@ func main() {
 	}
 	fmt.Printf("Listening on port %s at http://localhost:%s\n", port, port)
 	r := router.Setup()
-	fmt.Println("router set up successfully")
 	log.Fatalln(http.ListenAndServe(":"+port, r))
 }
