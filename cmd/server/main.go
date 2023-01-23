@@ -4,13 +4,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/CVWO/sample-go-app/internal/router"
 )
 
 func main() {
+	port := "8000"
+	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
+		port = fromEnv
+	}
+	fmt.Printf("Listening on port %s at http://localhost:%s\n", port, port)
 	r := router.Setup()
-	fmt.Println("Listening on port 8000 at http://localhost:8000!")
 
-	log.Fatalln(http.ListenAndServe(":8000", r))
+	log.Fatalln(http.ListenAndServe(":"+port, r))
 }
