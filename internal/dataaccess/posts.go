@@ -6,7 +6,7 @@ import (
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
-func GetPosts(db *sql.DB, id string, filter string, searchTerm string) ([]models.Post, error) {
+func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author string, likedBy string) ([]models.Post, error) {
 
 	var results *sql.Rows
 	var err error
@@ -36,8 +36,8 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string) ([]models
 																AND (
 																	Posts.title LIKE '%` + searchTerm + `%' OR
 																	Posts.post_text LIKE '%` + searchTerm + `%'
-																)`)
-	} else if filter != "all" {
+																) ORDER BY date_created DESC`)
+	} else if author != "" {
 		results, err = db.Query(`SELECT Posts.id AS id,
 																		Posts.author_id AS author_id,
 																		Users.username AS author_username,
@@ -47,7 +47,30 @@ func GetPosts(db *sql.DB, id string, filter string, searchTerm string) ([]models
 																		Posts.title AS title,
 																		Posts.post_text AS post_text
 																FROM Posts
-																JOIN Users ON Posts.author_id = Users.id AND Posts.Category = '` + filter + `'`)
+																JOIN Users ON Posts.author_id = Users.id AND Posts.author_id = ` + author)
+	} else if likedBy != "" {
+		results, err = db.Query(`SELECT Posts.id AS id,
+																		Posts.author_id AS author_id,
+																		Users.username AS author_username,
+																		Users.avatarColor AS author_avatarColor,
+																		Posts.Category AS category,
+																		Posts.date_created AS date_created,
+																		Posts.title AS title,
+																		Posts.post_text AS post_text
+																FROM Posts
+																JOIN Users ON Posts.author_id = Users.id 
+																JOIN Likes ON Likes.post_id = Posts.id AND Likes.user_id = ` + likedBy)
+	} else if filter != ("All") {
+		results, err = db.Query(`SELECT Posts.id AS id,
+																		Posts.author_id AS author_id,
+																		Users.username AS author_username,
+																		Users.avatarColor AS author_avatarColor,
+																		Posts.Category AS category,
+																		Posts.date_created AS date_created,
+																		Posts.title AS title,
+																		Posts.post_text AS post_text
+																FROM Posts
+																JOIN Users ON Posts.author_id = Users.id AND Posts.Category = '` + filter + `' ORDER BY date_created DESC`)
 	} else {
 		results, err = db.Query(`SELECT Posts.id AS id,
 																		Posts.author_id AS author_id,

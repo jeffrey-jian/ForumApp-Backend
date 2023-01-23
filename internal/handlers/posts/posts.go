@@ -17,6 +17,7 @@ import (
 const (
 	ListPosts  = "posts.HandleList"
 	CreatePost = "posts.HandleCreatePost"
+	EditPost   = "posts.HandleEditPost"
 	DeletePost = "posts.HandleDeletePost"
 
 	SuccessfulListPostsMessage = "Successfully listed posts"
@@ -36,8 +37,10 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	id := r.URL.Query().Get("id")
 	filter := r.URL.Query().Get("filter")
 	searchTerm := r.URL.Query().Get("searchTerm")
+	author := r.URL.Query().Get("author")
+	likedBy := r.URL.Query().Get("likedBy")
 
-	posts, err := da.GetPosts(db, id, filter, searchTerm)
+	posts, err := da.GetPosts(db, id, filter, searchTerm, author, likedBy)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrievePosts, ListPosts))
 	}
@@ -87,6 +90,32 @@ func HandleCreatePost(w http.ResponseWriter, r *http.Request) (*api.Response, er
 	defer query.Close()
 
 	respondwithJSON(w, http.StatusCreated, map[string]string{"message": "successfully created"})
+	return nil, nil
+}
+
+func HandleEditPost(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
+
+	db, err := database.GetDB()
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, EditPost))
+	}
+
+	var post models.Post
+	id := chi.URLParam(r, "id")
+	json.NewDecoder(r.Body).Decode(&post)
+
+	query, err := db.Prepare("UPDATE Posts SET category=?, title=?, post_text=? WHERE id=?")
+	if err != nil {
+		return nil, err
+	}
+
+	_, er := query.Exec(post.Category, post.Title, post.Post_text, id)
+	if er != nil {
+		return nil, er
+	}
+	defer query.Close()
+
+	respondwithJSON(w, http.StatusOK, map[string]string{"message": "successfully deleted"})
 	return nil, nil
 }
 
