@@ -1,1 +1,1 @@
-web: cmd/server
+web: cmd/server/main.go
