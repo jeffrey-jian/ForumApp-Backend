@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/CVWO/sample-go-app/internal/database"
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
-func GetPosts(db *sql.DB, id string, filter string, searchTerm string, author string, likedBy string) ([]models.Post, error) {
+func GetPosts(id string, filter string, searchTerm string, author string, likedBy string) ([]models.Post, error) {
 
+	var db = database.DB
 	var results *sql.Rows
 	var err error
 

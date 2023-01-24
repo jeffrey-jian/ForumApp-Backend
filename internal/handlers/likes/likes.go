@@ -27,15 +27,9 @@ const (
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
-	db, err := database.GetDB()
-
-	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListLikes))
-	}
-
 	post_id := r.URL.Query().Get("post_id")
 
-	posts, err := da.GetLikes(db, post_id)
+	posts, err := da.GetLikes(post_id)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveLikes, ListLikes))
 	}
@@ -55,7 +49,6 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
 func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
-	// fmt.Println(payload)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)

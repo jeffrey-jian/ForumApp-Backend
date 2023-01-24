@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/CVWO/sample-go-app/internal/database"
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
@@ -17,10 +18,12 @@ import (
 // 	return users, nil
 // }
 
-func GetUsers(db *sql.DB, username string, avatarColor string) ([]models.User, error) {
+func GetUsers(username string, avatarColor string) ([]models.User, error) {
 
+	var db = database.DB
 	var results *sql.Rows
 	var err error
+
 	users := []models.User{}
 	if username != "" {
 		var user models.User

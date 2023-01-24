@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	// "github.com/CVWO/sample-go-app/internal/database"
 	"github.com/CVWO/sample-go-app/internal/handlers/comments"
 	"github.com/CVWO/sample-go-app/internal/handlers/likes"
 	"github.com/CVWO/sample-go-app/internal/handlers/posts"
@@ -15,7 +16,6 @@ import (
 func GetRoutes() func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/users", GetUsers)
-		// r.Post("/users", NewUser)
 		r.Get("/posts", GetPosts)
 		r.Post("/posts", CreatePost)
 		r.Put("/posts/{id}", EditPost)
@@ -36,10 +36,6 @@ func GetUsers(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
-
-// func NewUser(w http.ResponseWriter, req *http.Request) {
-// 	users.HandleNewUser(w, req)
-// }
 
 func GetPosts(w http.ResponseWriter, req *http.Request) {
 	response, _ := posts.HandleList(w, req)

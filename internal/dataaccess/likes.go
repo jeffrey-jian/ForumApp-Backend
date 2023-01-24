@@ -3,10 +3,13 @@ package dataaccess
 import (
 	"database/sql"
 
+	"github.com/CVWO/sample-go-app/internal/database"
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
-func GetLikes(db *sql.DB, post_id string) ([]models.Like, error) {
+func GetLikes(post_id string) ([]models.Like, error) {
+
+	var db = database.DB
 
 	var results *sql.Rows
 	var err error

@@ -3,11 +3,13 @@ package dataaccess
 import (
 	"database/sql"
 
+	"github.com/CVWO/sample-go-app/internal/database"
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
-func GetComments(db *sql.DB, post_id string) ([]models.Comment, error) {
+func GetComments(post_id string) ([]models.Comment, error) {
 
+	var db = database.DB
 	var results *sql.Rows
 	var err error
 	if post_id != "" {

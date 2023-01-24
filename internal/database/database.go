@@ -8,17 +8,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Database struct {
-}
-
-// func GetDB() (*Database, error) {
-// 	return &Database{}, nil
-// }
+var DB *sql.DB
 
 func GetDB() (*sql.DB, error) {
 
-	var db *sql.DB
 	fmt.Println("Connecting to DB")
+
 	// for localhost use
 	// db, err := sql.Open("mysql", "root:gya1ydxf@tcp(127.0.0.1:3306)/forum")
 
@@ -33,21 +28,19 @@ func GetDB() (*sql.DB, error) {
 		DBName:               "heroku_375321b59849bf2",
 		AllowNativePasswords: true,
 	}
-	db, err := sql.Open("mysql", cfg.FormatDSN())
-
+	var err error
+	DB, err = sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		fmt.Println("Error connecting to DB:", err)
-		return &sql.DB{}, err
+		return nil, err
 	}
 
-	pingErr := db.Ping()
-	if pingErr != nil {
-		fmt.Println("Error pinging to DB:", pingErr)
-		return &sql.DB{}, pingErr
+	err = DB.Ping()
+	if err != nil {
+		fmt.Println("Error pinging to DB:", err)
+		return nil, err
 	}
 
-	fmt.Println("Database connected!")
-
-	return db, nil
+	return DB, nil
 
 }

@@ -28,21 +28,14 @@ const (
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
-	db, err := database.GetDB()
-	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListPosts))
-	}
-
 	id := r.URL.Query().Get("id")
 	filter := r.URL.Query().Get("filter")
 	searchTerm := r.URL.Query().Get("searchTerm")
 	author := r.URL.Query().Get("author")
 	likedBy := r.URL.Query().Get("likedBy")
 
-	fmt.Println("Executing da.GetPosts()...")
-	posts, err := da.GetPosts(db, id, filter, searchTerm, author, likedBy)
+	posts, err := da.GetPosts(id, filter, searchTerm, author, likedBy)
 	if err != nil {
-		fmt.Println("Error while executing da.GetPosts()")
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrievePosts, ListPosts))
 	}
 
@@ -50,7 +43,6 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrEncodeView, ListPosts))
 	}
-	fmt.Println("Successfully executed da.GetPosts().")
 	return &api.Response{
 		Payload: api.Payload{
 			Data: data,
@@ -61,7 +53,6 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
 func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
-	// fmt.Println(payload)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)

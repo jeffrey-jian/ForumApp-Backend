@@ -28,15 +28,9 @@ const (
 
 func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
-	db, err := database.GetDB()
-
-	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveDatabase, ListComments))
-	}
-
 	post_id := r.URL.Query().Get("post_id")
 
-	posts, err := da.GetComments(db, post_id)
+	posts, err := da.GetComments(post_id)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf(ErrRetrieveComments, ListComments))
 	}
@@ -56,7 +50,6 @@ func HandleList(w http.ResponseWriter, r *http.Request) (*api.Response, error) {
 
 func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
-	// fmt.Println(payload)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
@@ -102,7 +95,6 @@ func HandleEditComment(w http.ResponseWriter, r *http.Request) (*api.Response, e
 	var comment models.Comment
 	id := chi.URLParam(r, "id")
 	json.NewDecoder(r.Body).Decode(&comment)
-	fmt.Println(r.Body)
 
 	query, err := db.Prepare("UPDATE Comments SET comment_text=? WHERE id=?")
 	if err != nil {
@@ -139,7 +131,7 @@ func HandleDeleteComment(w http.ResponseWriter, r *http.Request) (*api.Response,
 	if er != nil {
 		return nil, er
 	}
-	query.Close()
+	defer query.Close()
 
 	respondwithJSON(w, http.StatusOK, map[string]string{"message": "successfully deleted"})
 
