@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	// "github.com/CVWO/sample-go-app/internal/database"
 	"github.com/CVWO/sample-go-app/internal/handlers/comments"
 	"github.com/CVWO/sample-go-app/internal/handlers/likes"
 	"github.com/CVWO/sample-go-app/internal/handlers/posts"

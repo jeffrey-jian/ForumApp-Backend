@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
@@ -10,22 +11,23 @@ import (
 
 var DB *sql.DB
 
+// getDB establishes connection with database, info from env
 func GetDB() (*sql.DB, error) {
 
 	fmt.Println("Connecting to DB")
 
-	// for localhost use
-	// db, err := sql.Open("mysql", "root:gya1ydxf@tcp(127.0.0.1:3306)/forum")
-
-	// hardcoded address for clearDB connection
-	// db, err := sql.Open("mysql", "b83f3be08aeca3:acf4cd99@tcp(us-cdbr-east-06.cleardb.net)/heroku_375321b59849bf2")
+	user := os.Getenv("DBUSER")
+	password := os.Getenv("DBPASS")
+	net := os.Getenv("DBNET")
+	address := os.Getenv("DBADDRESS")
+	dbName := os.Getenv("DBNAME")
 
 	cfg := mysql.Config{
-		User:                 "b83f3be08aeca3",
-		Passwd:               "acf4cd99",
-		Net:                  "tcp",
-		Addr:                 "us-cdbr-east-06.cleardb.net",
-		DBName:               "heroku_375321b59849bf2",
+		User:                 user,
+		Passwd:               password,
+		Net:                  net,
+		Addr:                 address,
+		DBName:               dbName,
 		AllowNativePasswords: true,
 	}
 	var err error
@@ -34,7 +36,6 @@ func GetDB() (*sql.DB, error) {
 		fmt.Println("Error connecting to DB:", err)
 		return nil, err
 	}
-
 	err = DB.Ping()
 	if err != nil {
 		fmt.Println("Error pinging to DB:", err)
@@ -42,5 +43,4 @@ func GetDB() (*sql.DB, error) {
 	}
 
 	return DB, nil
-
 }

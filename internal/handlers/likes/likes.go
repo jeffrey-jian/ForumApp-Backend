@@ -100,7 +100,7 @@ func HandleDeleteLike(w http.ResponseWriter, r *http.Request) (*api.Response, er
 	}
 	query.Close()
 
-	respondwithJSON(w, http.StatusOK, map[string]string{"message": "successfully deleted"})
+	respondwithJSON(w, http.StatusNoContent, map[string]string{"message": "successfully deleted"})
 
 	return nil, nil
 }

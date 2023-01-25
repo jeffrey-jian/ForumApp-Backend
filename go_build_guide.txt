@@ -1,0 +1,12 @@
+RUN 
+
+env GOOS=linux GOARCH=amd64 go build -o ../../bin/forum-app-backend -v .
+
+IN cmd/server 
+
+
+  User:                 "b83f3be08aeca3",
+  Passwd:               "=",
+  Net:                  "tcp",
+  Addr:                 "us-cdbr-east-06.cleardb.net",
+  DBName:               "heroku_375321b59849bf2",

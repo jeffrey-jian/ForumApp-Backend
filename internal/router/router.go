@@ -20,7 +20,6 @@ func Setup() chi.Router {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	setUpRoutes(r)
-	fmt.Println("router and routes set up successfully")
 	return r
 }
 

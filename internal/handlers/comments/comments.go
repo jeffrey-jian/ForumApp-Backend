@@ -133,7 +133,7 @@ func HandleDeleteComment(w http.ResponseWriter, r *http.Request) (*api.Response,
 	}
 	defer query.Close()
 
-	respondwithJSON(w, http.StatusOK, map[string]string{"message": "successfully deleted"})
+	respondwithJSON(w, http.StatusNoContent, map[string]string{"message": "successfully deleted"})
 
 	return nil, nil
 }

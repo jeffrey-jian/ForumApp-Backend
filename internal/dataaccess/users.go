@@ -8,16 +8,6 @@ import (
 	"github.com/CVWO/sample-go-app/internal/models"
 )
 
-// func List(db *sql.DB) ([]models.User, error) {
-// 	users := []models.User{
-// 		{
-// 			ID:   1,
-// 			Name: "CVWO",
-// 		},
-// 	}
-// 	return users, nil
-// }
-
 func GetUsers(username string, avatarColor string) ([]models.User, error) {
 
 	var db = database.DB
@@ -41,19 +31,6 @@ func GetUsers(username string, avatarColor string) ([]models.User, error) {
 			fmt.Printf("username is %s\n", username)
 			users = append(users, user)
 		}
-		// results, err = db.Query("INSERT INTO Users (username) VALUES ('" + username + "')")
-		// if err != nil {
-		// 	if driverErr, ok := err.(*mysql.MySQLError); ok { // Now the error number is accessible directly
-		// 		if driverErr.Number == 1062 {
-		// 			// Handle the duplicate entry error
-		// 			fmt.Println("======= user already created =========")
-		// 			results, err = db.Query("SELECT * FROM users WHERE username='" + username + "'")
-		// 			if err != nil {
-		// 				panic(err.Error())
-		// 			}
-		// 		}
-		// 	}
-		// }
 
 	} else {
 		results, err = db.Query("SELECT * FROM users")
